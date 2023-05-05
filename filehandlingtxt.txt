@@ -1,0 +1,135 @@
+Public Class Form1
+    Private Drives() As DriveInfo = DriveInfo.GetDrives()
+    Private Path As String
+    Private myfile As String
+    Private _myApp() As String = {"Notepad", "Word", "Access", "Excel", "PowerPoint", "Wordpad"}
+    Private message As String = "The Delete operation was successful."
+    Private STRmess As String = "Sorry, Invalid File or Directory."
+    Private MESS As String = "Hello, guyseo."
+    Private BTNN As MessageBoxButtons = MessageBoxButtons.OK
+    Private MESSicon As MessageBoxIcon = MessageBoxIcon.Information
+
+    Private Sub Btnselectf_Click(sender As Object, e As EventArgs) Handles Btnselectf.Click
+
+        If OpenFileDialog1.ShowDialog = Windows.Forms.DialogResult.OK Then
+
+            txtsft.Text = OpenFileDialog1.FileName
+
+        End If
+
+    End Sub
+
+    Private Sub Btndelete_Click(sender As Object, e As EventArgs) Handles Btndelete.Click
+        Dim CUTIE As String
+
+        CUTIE = txtsft.Text
+
+        Kill(CUTIE)
+    End Sub
+
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        For Each d In Drives
+
+            cbmfiledrive.Items.Add(d.Name)
+
+        Next
+
+        cbmfiledrive.SelectedIndex = 2
+
+        With cmbopenW
+
+            .Items.AddRange(_myApp)
+            .SelectedIndex = 0
+
+        End With
+    End Sub
+
+    Private Sub BtnCreate_Click(sender As Object, e As EventArgs) Handles BtnCreate.Click
+        Dim mydrive As String = cbmfiledrive.SelectedItem
+
+        Path = mydrive + txtfoldername.Text
+        myfile = Path + "\" + txtfilename.Text + ".txt"
+
+        If Not FolderExists(Path) Then
+
+            MessageBox.Show("The directory " & Chr(34) + Path + Chr(34) & "Does not exist.", MESS, BTNN, MESSicon)
+
+            Directory.CreateDirectory(Path)
+
+        End If
+
+        If Not FileExists(myfile) Then
+
+            MessageBox.Show("The file " & Chr(34) + txtfilename.Text & ".txt" + Chr(34) & " does not exist in the directory " _
+                             & Chr(34) + Path & "." + Chr(34), MESS, BTNN, MESSicon)
+            Using sw As StreamWriter = File.CreateText(myfile)
+
+                sw.Write("Hello, ")
+                sw.Write("GUYS! ")
+                sw.Write("KEEP IT UP ")
+                sw.Write("NICE ONE!. ")
+                sw.Write("SUCCESSFULLY, OPEN THIS FILE :).")
+                sw.Flush()
+
+            End Using
+
+        Else
+
+            Dim strappend As String = RichTextBox1.Text
+
+            Using swappend As New StreamWriter(myfile, True)
+
+                swappend.WriteLine(strappend)
+
+            End Using
+
+        End If
+
+        txtspdD.Text = myfile
+
+    End Sub
+
+    Private Sub Btnupdate_Click(sender As Object, e As EventArgs) Handles Btnupdate.Click
+        Dim text As New StringBuilder
+
+        text.AppendLine(RichTextBox1.Text)
+
+        Dim filepath As String = "C:\BSIT\NICOLE"
+
+        File.AppendAllText(filepath, text.ToString())
+
+    End Sub
+
+    Private Sub BtnRead_Click(sender As Object, e As EventArgs) Handles BtnRead.Click
+        Dim ReadText As String = My.Computer.FileSystem.ReadAllText("C:\BSIT\NICOLE")
+
+        RichTextBox1.Text = ReadText
+
+    End Sub
+
+    Private Sub cmdClear_Click(sender As Object, e As EventArgs) Handles cmdClear.Click
+
+        Dim filePath As String = "C:\BSIT\NICOLE"
+
+        ' Set the line number to delete
+        Dim lineNumberToDelete As Integer = 1
+
+        ' Read the existing lines from the file into a list
+        Dim lines As List(Of String) = File.ReadAllLines(filePath).ToList()
+
+        ' Remove the line to delete
+        lines.RemoveAt(lineNumberToDelete - 1)
+
+        ' Write the updated lines back to the file
+        File.WriteAllLines(filePath, lines)
+
+
+    End Sub
+
+    Private Sub cmdRemove_Click(sender As Object, e As EventArgs) Handles cmdRemove.Click
+
+        RichTextBox1.Clear()
+
+    End Sub
+End Class
