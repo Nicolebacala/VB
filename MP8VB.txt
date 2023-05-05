@@ -1,0 +1,222 @@
+Public Class Form1
+    Public customerName As String, Address As String, telephone As String
+
+    Private Sub cmdsubmit_Click(sender As Object, e As EventArgs) Handles cmdsubmit.Click
+        If txtshipAdd.Text = "" Or txtcustomername.Text = "" Or txttelephone.Text = "" Then
+            MessageBox.Show("There is a a required Field!", "Required Fields", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        Else
+            Me.Hide()
+            CustomerInfo()
+            PIinfo.Show()
+        End If
+    End Sub
+
+    Private Sub cmdclear_Click(sender As Object, e As EventArgs) Handles cmdclear.Click
+
+        txtcustomername.Clear()
+        txtshipAdd.Clear()
+        txttelephone.Clear()
+
+    End Sub
+
+    Public Sub CustomerInfo()
+        customerName = txtcustomername.Text
+        Address = txtshipAdd.Text
+        telephone = txttelephone.Text
+    End Sub
+    Private Sub Form1_load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    End Sub
+End Class
+ --------------------------------------------------------------------------------------------------------------------
+Public Class PIinfo
+    Public identifier As String, price As Decimal, quantity As Integer
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles cmdsubb.Click
+
+
+        If txtidentifier.Text = "" Or txtprice.Text = "" Or txtquan.Text = "" Then
+            MessageBox.Show("There is a a required Field!", "Required Fields", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        Else
+            If IsNumeric(txtidentifier.Text) = False Or IsNumeric(txtquan.Text) = False Then
+                MessageBox.Show("Cannot Processed Character pr a price and Quantity!", "Numbers Only", MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning)
+            Else
+                Purchase()
+                TotalPrice(Me)
+                Me.Hide()
+                Halohalo.Show()
+
+            End If
+        End If
+
+    End Sub
+
+    Private Sub PI_load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    End Sub
+
+    Private Sub Purchase()
+        identifier = txtidentifier.Text
+        price = txtprice.Text
+        quantity = txtquan.Text
+    End Sub
+
+End Class
+-------------------------------------------------------------------------------------------------------
+Public Class Halohalo
+    Public status As Decimal, shipment As Decimal, extras As Integer, sltax As Decimal
+    Public statusdisplay As String, shipmentdisplay As String, extrasdisplay1 As String, extrasdispaly2 As String, extrasdisplay3 As String, extradisplaygrid As String
+
+
+
+    Private Sub cmdcompute_Click(sender As Object, e As EventArgs) Handles cmdcompute.Click
+        If rbtwholesale.Checked Then
+            statusdisplay = rbtwholesale.Text
+            status = 0.1
+            sltax = 0
+        ElseIf rbtretail.Checked Then
+            statusdisplay = rbtretail.Text
+            status = 0.5
+            sltax = 0
+        End If
+
+        If rbtexair.Checked Then
+            shipmentdisplay = rbtwholesale.Text
+            shipment = 25
+        ElseIf rbtexground.Checked Then
+
+            shipmentdisplay = rbtexground.Text
+            shipment = 20
+        ElseIf rbtus.Checked Then
+            shipmentdisplay = rbtus.Text
+            shipment = 12.0
+
+        End If
+        If chkclubmem.Checked Then
+            extrasdisplay1 = "Club Membership"
+            extras += 150
+
+        End If
+        If chkoneyear.Checked Then
+            extrasdispaly2 = "One Year Warranty"
+            extras += 75
+        End If
+        If chktire.Checked Then
+            extrasdisplay3 = "Tire Sale"
+            extras = +75
+        End If
+        extradisplaygrid = extrasdisplay1 + extrasdispaly2 + extrasdisplay3
+        ShippCost(Me)
+        ExtrasCost(Me)
+        DiscountFee(Me)
+        SubtotalCost()
+        salestax()
+        TotalDue()
+        SavetoDataGrid()
+
+        MessageBox.Show("New Record successfully save", "Record Save:)", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    End Sub
+
+    Private Sub cmdclear_Click(sender As Object, e As EventArgs) Handles cmdclear.Click
+        Form1.txtcustomername.Clear()
+        Form1.txtshipAdd.Clear()
+        Form1.txttelephone.Clear()
+        PIinfo.txtidentifier.Clear()
+        PIinfo.txtprice.Clear()
+        PIinfo.txtquan.Clear()
+        rbtwholesale.Checked = True
+        rbtexair.Checked = True
+        chkclubmem.Checked = False
+        chktire.Checked = False
+        chkoneyear.Checked = False
+        rbtwholesale.Checked = False
+        rbtretail.Checked = False
+        rbtexair.Checked = False
+        rbtexground.Checked = False
+        rbtus.Checked = False
+        chkclubmem.Checked = False
+        chktire.Checked = False
+        chkoneyear.Checked = False
+
+    End Sub
+
+    Private Sub IBA_load(sender As Object, e As EventArgs) Handles MyBase.Load
+        extrasdisplay1 = ""
+        extrasdispaly2 = ""
+        extrasdisplay3 = ""
+        extras = 0
+        rbtwholesale.Checked = True
+        rbtexair.Checked = True
+    End Sub
+    Private Sub cmdnew_Click(sender As Object, e As EventArgs) Handles cmdnew.Click
+        Me.Hide()
+        Form1.Show()
+    End Sub
+
+    Private Sub cmdretailcus_Click(sender As Object, e As EventArgs) Handles cmdretailcustomer.Click
+        RETAILCUSTOMER.Show()
+    End Sub
+
+    Private Sub cmdwholecustomer_Click(sender As Object, e As EventArgs) Handles cmdwholecustomer.Click
+        WHOLESALECUSTOMER.Show()
+    End Sub
+
+    Private Sub cmdallcustomer_Click(sender As Object, e As EventArgs) Handles cmdallcustomer.Click
+        ALLCUSTOMER.Show()
+    End Sub
+
+    Private Sub SavetoDataGrid()
+        ALLCUSTOMER.DataGridView1.Rows.Add(Form1.Name, Form1.Address, Form1.telephone, PIinfo.identifier, PIinfo.price, PIinfo.quantity, statusdisplay,
+                                           shipmentdisplay, extrasdisplay1 + extrasdispaly2 + extrasdisplay3, shipcost, Module1pinfo.extras, discount, subtotal, tax, due)
+
+        If rbtwholesale.Checked Then
+            WHOLESALECUSTOMER.DataGridView1.Rows.Add(Form1.Name, Form1.Address, Form1.telephone, PIinfo.identifier, PIinfo.price, PIinfo.quantity, statusdisplay,
+                                           shipmentdisplay, extrasdisplay1 + extrasdispaly2 + extrasdisplay3, shipcost, Module1pinfo.extras, discount, subtotal, tax, due)
+        End If
+        If rbtretail.Checked Then
+            RETAILCUSTOMER.DataGridView1.Rows.Add(Form1.Name, Form1.Address, Form1.telephone, PIinfo.identifier, PIinfo.price, PIinfo.quantity, statusdisplay,
+                                       shipmentdisplay, extrasdisplay1 + extrasdispaly2 + extrasdisplay3, shipcost, Module1pinfo.extras, discount, subtotal, tax, due)
+        End If
+    End Sub
+
+End Class
+--------------------------------------------------------------------------------------------------------
+MODULE:
+
+Module Module1pinfo
+    Public total As Decimal, subtotal, tax As Decimal, due As Decimal
+    Public shipcost As Decimal, extras As Integer, discount As Integer
+    Public quantity, price As Integer
+
+    Public Sub Totalprice(PurchaseInfo As PIinfo)
+        quantity = PurchaseInfo.quantity
+        price = PurchaseInfo.price
+        total = price * quantity
+
+    End Sub
+    Public Sub ShippCost(Halohalo As Halohalo)
+        shipcost = quantity * Halohalo.shipment
+    End Sub
+    Public Sub ExtrasCost(Halohalo As Halohalo)
+        extras = Halohalo.extras
+    End Sub
+    Public Sub DiscountFee(Halohalo As Halohalo)
+        discount = total * Halohalo.status
+    End Sub
+    Public Sub SubtotalCost()
+        subtotal = (total + shipcost + extras) - discount
+    End Sub
+
+    Public Sub SalesTax()
+        tax = Halohalo.sltax * total
+    End Sub
+
+    Public Sub TotalDue()
+        due = price * quantity + tax
+    End Sub
+
+End Module
+
+
+
