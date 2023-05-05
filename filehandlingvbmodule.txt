@@ -1,0 +1,19 @@
+
+Module MODYUL
+
+    Public Function FolderExists(ByVal Path As String) As Boolean
+
+        Dim f As New IO.DirectoryInfo(Path)
+
+        Return f.Exists
+
+    End Function
+
+    Public Function FileExists(ByVal myfile As String) As Boolean
+
+        Dim f As New IO.FileInfo(myfile)
+
+        Return f.Exists
+
+    End Function
+End Module
